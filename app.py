@@ -185,17 +185,22 @@ SEGMENT_COLORS = {
     "At Risk":    "#D8C5A8",
     "Lost":       "#D8A8B5",
 }
-
-@st.cache_data
 def load_data():
-    df = pd.read_excel("online_retail_II.xlsx", engine="openpyxl")
-    df.columns = df.columns.str.strip()
-    df = df.dropna(subset=["Customer ID"])
-    df = df[df["Quantity"] > 0]
-    df = df[df["Price"] > 0]
+    df = pd.DataFrame({
+        "Customer ID": [1, 2, 3, 1, 2],
+        "Invoice": ["A1", "A2", "A3", "A4", "A5"],
+        "Description": ["Bag", "Shoes", "Wallet", "Bag", "Shoes"],
+        "Quantity": [1, 1, 1, 2, 1],
+        "Price": [1000, 800, 500, 1000, 800],
+        "InvoiceDate": pd.to_datetime([
+            "2024-01-01", "2024-02-01", "2024-03-01",
+            "2024-04-01", "2024-05-01"
+        ])
+    })
+
     df["TotalSpend"] = df["Quantity"] * df["Price"]
-    df["InvoiceDate"] = pd.to_datetime(df["InvoiceDate"])
     df["Month"] = df["InvoiceDate"].dt.to_period("M").astype(str)
+
     return df
 
 df = load_data()
